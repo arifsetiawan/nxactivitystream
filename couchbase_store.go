@@ -3,6 +3,8 @@ package nxactivitystream
 import (
 	"errors"
 
+	"strconv"
+
 	"github.com/couchbase/gocb"
 )
 
@@ -41,18 +43,29 @@ func (c *CouchbaseStore) Create(a Activity) error {
 // TopicFeeds feeds to a Topic or Users
 func (c *CouchbaseStore) TopicFeeds(fType string, limit int, offset int, topicID string) ([]Activity, error) {
 
-	extras := ""
+	extras, limitStr, offsetStr := "", "", ""
+	paramIdx := 2
 	var params []interface{}
 	params = append(params, topicID)
-	params = append(params, limit)
-	params = append(params, offset)
+
+	if limit > 0 {
+		limitStr = "LIMIT $" + strconv.Itoa(paramIdx)
+		params = append(params, limit)
+		paramIdx++
+	}
+
+	if offset >= 0 {
+		offsetStr = "OFFSET $" + strconv.Itoa(paramIdx)
+		params = append(params, offset)
+		paramIdx++
+	}
 
 	if len(fType) > 0 {
-		extras = "AND a.type = $4"
+		extras = "AND a.type = $" + strconv.Itoa(paramIdx)
 		params = append(params, fType)
 	}
 
-	q := gocb.NewN1qlQuery("SELECT a.* FROM nextflow a WHERE a.topic = $1 " + extras + " ORDER BY a.published DESC LIMIT $2 OFFSET $3")
+	q := gocb.NewN1qlQuery("SELECT a.* FROM nextflow a WHERE a.topic = $1 " + extras + " ORDER BY a.published DESC " + limitStr + " " + offsetStr)
 	rows, err := c.Bucket.ExecuteN1qlQuery(q, params)
 
 	if err != nil {
@@ -72,18 +85,29 @@ func (c *CouchbaseStore) TopicFeeds(fType string, limit int, offset int, topicID
 // UserFeeds feeds to a User Stream
 func (c *CouchbaseStore) UserFeeds(fType string, limit int, offset int, userID string) ([]Activity, error) {
 
-	extras := ""
+	extras, limitStr, offsetStr := "", "", ""
+	paramIdx := 2
 	var params []interface{}
 	params = append(params, userID)
-	params = append(params, limit)
-	params = append(params, offset)
+
+	if limit > 0 {
+		limitStr = "LIMIT $" + strconv.Itoa(paramIdx)
+		params = append(params, limit)
+		paramIdx++
+	}
+
+	if offset >= 0 {
+		offsetStr = "OFFSET $" + strconv.Itoa(paramIdx)
+		params = append(params, offset)
+		paramIdx++
+	}
 
 	if len(fType) > 0 {
-		extras = "AND a.type = $4"
+		extras = "AND a.type = $" + strconv.Itoa(paramIdx)
 		params = append(params, fType)
 	}
 
-	q := gocb.NewN1qlQuery("SELECT a.* FROM nextflow a WHERE a.actor.id = $1 " + extras + " ORDER BY a.published DESC LIMIT $2 OFFSET $3")
+	q := gocb.NewN1qlQuery("SELECT a.* FROM nextflow a WHERE a.actor.id = $1 " + extras + " ORDER BY a.published DESC " + limitStr + " " + offsetStr)
 	rows, err := c.Bucket.ExecuteN1qlQuery(q, params)
 
 	if err != nil {
