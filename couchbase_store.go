@@ -2,7 +2,6 @@ package nxactivitystream
 
 import (
 	"errors"
-
 	"strconv"
 
 	"github.com/couchbase/gocb"
@@ -32,15 +31,21 @@ func NewCouchbaseStore(hostName string, bucketName string, password string) (*Co
 
 // Create an Activity
 func (c *CouchbaseStore) Create(a Activity) error {
-
 	if _, err := c.Bucket.Insert(a.ID, a, 0); err != nil {
 		return err
 	}
-
 	return nil
 }
 
-// TopicFeeds feeds to a Topic or Users
+// Remove an Activity
+func (c *CouchbaseStore) Remove(key string) error {
+	if _, err := c.Bucket.Remove(key, 0); err != nil {
+		return err
+	}
+	return nil
+}
+
+// TopicFeeds feeds to a specified Topic
 func (c *CouchbaseStore) TopicFeeds(fType string, limit int, offset int, topicID string) ([]Activity, error) {
 
 	extras, limitStr, offsetStr := "", "", ""
