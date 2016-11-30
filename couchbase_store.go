@@ -81,6 +81,9 @@ func (c *CouchbaseStore) TopicFeeds(fType string, limit int, offset int, topicID
 	var acs []Activity
 	for i := 0; rows.Next(&ac); i++ {
 		acs = append(acs, ac)
+
+		// re-init
+		ac = Activity{}
 	}
 	rows.Close()
 
@@ -123,6 +126,9 @@ func (c *CouchbaseStore) UserFeeds(fType string, limit int, offset int, userID s
 	var acs []Activity
 	for i := 0; rows.Next(&ac); i++ {
 		acs = append(acs, ac)
+
+		// re-init
+		ac = Activity{}
 	}
 	rows.Close()
 
