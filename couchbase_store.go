@@ -31,7 +31,7 @@ func NewCouchbaseStore(hostName string, bucketName string, password string) (*Co
 
 // Create an Activity
 func (c *CouchbaseStore) Create(a Activity) error {
-	if _, err := c.Bucket.Insert(a.ID, a, 0); err != nil {
+	if _, err := c.Bucket.Insert("activitystream:"+a.ID, a, 0); err != nil {
 		return err
 	}
 	return nil
@@ -39,7 +39,7 @@ func (c *CouchbaseStore) Create(a Activity) error {
 
 // Remove an Activity
 func (c *CouchbaseStore) Remove(key string) error {
-	if _, err := c.Bucket.Remove(key, 0); err != nil {
+	if _, err := c.Bucket.Remove("activitystream:"+key, 0); err != nil {
 		return err
 	}
 	return nil
