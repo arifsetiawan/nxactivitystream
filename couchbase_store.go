@@ -9,7 +9,8 @@ import (
 
 // CouchbaseStore is a representation of Couchbase Obj
 type CouchbaseStore struct {
-	Bucket *gocb.Bucket
+	Bucket     *gocb.Bucket
+	BucketName string
 }
 
 // NewCouchbaseStore is a function to Initiate Couchbase store
@@ -25,7 +26,8 @@ func NewCouchbaseStore(hostName string, bucketName string, password string) (*Co
 	}
 
 	return &CouchbaseStore{
-		Bucket: bucket,
+		Bucket:     bucket,
+		BucketName: bucketName,
 	}, nil
 }
 
@@ -70,7 +72,7 @@ func (c *CouchbaseStore) TopicFeeds(fType string, limit int, offset int, topicID
 		params = append(params, fType)
 	}
 
-	q := gocb.NewN1qlQuery("SELECT a.* FROM nextflow a WHERE a.topic = $1 " + extras + " ORDER BY a.published DESC " + limitStr + " " + offsetStr)
+	q := gocb.NewN1qlQuery("SELECT a.* FROM " + c.BucketName + " a WHERE a.topic = $1 " + extras + " ORDER BY a.published DESC " + limitStr + " " + offsetStr)
 	rows, err := c.Bucket.ExecuteN1qlQuery(q, params)
 
 	if err != nil {
@@ -115,7 +117,7 @@ func (c *CouchbaseStore) UserFeeds(fType string, limit int, offset int, userID s
 		params = append(params, fType)
 	}
 
-	q := gocb.NewN1qlQuery("SELECT a.* FROM nextflow a WHERE a.actor.id = $1 " + extras + " ORDER BY a.published DESC " + limitStr + " " + offsetStr)
+	q := gocb.NewN1qlQuery("SELECT a.* FROM " + c.BucketName + " a WHERE a.actor.id = $1 " + extras + " ORDER BY a.published DESC " + limitStr + " " + offsetStr)
 	rows, err := c.Bucket.ExecuteN1qlQuery(q, params)
 
 	if err != nil {
