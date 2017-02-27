@@ -1,0 +1,12 @@
+hash: ca19afe9cda2422ea1f855062db70784e2343fdcf1f3201b88ee84b089b1deed
+updated: 2017-02-27T11:01:29.022730281+07:00
+imports:
+- name: github.com/couchbase/gocb
+  version: 6fca8af693ca20d33fd8427a09636362061a3b71
+- name: github.com/mparaiso/lodash-go
+  version: 3b0d20ef4fa15e59c45c5a7a20872c4409e74e49
+- name: gopkg.in/brett19/jsonx.v1
+  version: 5b7baa20429a46a5543ee259664cc86502738cad
+- name: gopkg.in/couchbase/gocbcore.v2
+  version: 22d72f05785ba26be033aa8b6726435b5e50a7a0
+testImports: []

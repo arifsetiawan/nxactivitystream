@@ -16,7 +16,7 @@ type Activity struct {
 	Name      string      `json:"name,omitempty"`
 	Actor     *BaseObject `json:"actor,omitempty"`
 	Target    *BaseObject `json:"target,omitempty"`
-	Object    *BaseObject `json:"_object,omitempty"`
+	Object    *BaseObject `json:"object,omitempty"`
 	Published time.Time   `json:"published, omitempty"`
 }
 
@@ -43,4 +43,11 @@ type BaseObject struct {
 	DisplayName string            `json:"display_name,omitempty"`
 	Content     string            `json:"content,omitempty"`
 	MetaData    map[string]string `json:"meta_data,omitempty"`
+}
+
+// Subscription is
+type Subscription struct {
+	ID     string      `json:"id"`
+	Actor  *BaseObject `json:"actor,omitempty"`
+	Topics []string    `json:"topics,omitempty"`
 }

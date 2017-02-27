@@ -1,1 +1,5 @@
 package: github.com/irfannurhakim/nxactivitystream
+import:
+- package: github.com/couchbase/gocb
+  version: ^1.2.0
+- package: github.com/mparaiso/lodash-go
