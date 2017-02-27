@@ -51,19 +51,18 @@ func (c *CouchbaseStore) Remove(key string) error {
 }
 
 // Subscribe to a specific topic
-func (c *CouchbaseStore) Subscribe(userID string, topicID string) error {
+func (c *CouchbaseStore) Subscribe(userID string, topicIDs []string) error {
 
 	s := new(Subscription)
 	if _, err := c.Bucket.Get("activitystream:sub:"+userID, &s); err != nil {
 		// Record not found, just create it
 		s.ID = "activitystream:sub:" + userID
 		s.Actor = &BaseObject{DisplayName: userID}
-		s.Topics = []string{topicID}
+		s.Topics = topicIDs
 	}
 
-	newTopic := []string{topicID}
 	var topics []string
-	err := lo.Union(s.Topics, newTopic, &topics)
+	err := lo.Union(s.Topics, topicIDs, &topics)
 	if err != nil {
 		return err
 	}
@@ -77,15 +76,14 @@ func (c *CouchbaseStore) Subscribe(userID string, topicID string) error {
 }
 
 // Unsubscribe from a topic
-func (c *CouchbaseStore) Unsubscribe(userID string, topicID string) error {
+func (c *CouchbaseStore) Unsubscribe(userID string, topicIDs []string) error {
 	s := new(Subscription)
 	if _, err := c.Bucket.Get("activitystream:sub:"+userID, &s); err != nil {
 		return err
 	}
 
-	newTopic := []string{topicID}
 	var topics []string
-	err := lo.Difference(s.Topics, newTopic, &topics)
+	err := lo.Difference(s.Topics, topicIDs, &topics)
 	if err != nil {
 		return err
 	}
