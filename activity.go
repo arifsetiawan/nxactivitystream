@@ -37,12 +37,12 @@ type OrderedCollectionPage struct {
 
 // BaseObject is represent of general object
 type BaseObject struct {
-	ID          string            `json:"id"`
-	URL         string            `json:"url,omitempty"`
-	ObjectType  string            `json:"object_type,omitempty"`
-	DisplayName string            `json:"display_name,omitempty"`
-	Content     string            `json:"content,omitempty"`
-	MetaData    map[string]string `json:"meta_data,omitempty"`
+	ID          string                 `json:"id"`
+	URL         string                 `json:"url,omitempty"`
+	ObjectType  string                 `json:"object_type,omitempty"`
+	DisplayName string                 `json:"display_name,omitempty"`
+	Content     string                 `json:"content,omitempty"`
+	MetaData    map[string]interface{} `json:"meta_data,omitempty"`
 }
 
 // Subscription is
